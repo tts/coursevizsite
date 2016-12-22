@@ -100,10 +100,9 @@ draw <- function(df) {
     scale_y_continuous(breaks = seq(0,
                                     y_axis_nr_empty_ticks_above_zero+length(y_axis_ticks),
                                     by=1),
-                       labels = c(y_axis_empty_ticks, y_axis_ticks)) 
-  #+
-   # ggtitle(paste0(df$Opiskelijanumero, " ",  df$Nimi[1])) +
-  #  theme(plot.title = element_text(size = title_font_size))
+                       labels = c(y_axis_empty_ticks, y_axis_ticks)) +
+    ggtitle(paste0(df$Opiskelijanumero, " ",  df$Nimi[1])) +
+    theme(plot.title = element_text(size = title_font_size))
 
   return(p)
   
