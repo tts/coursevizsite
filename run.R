@@ -55,6 +55,8 @@ draw <- function(df) {
   
   df$onclick <- sprintf("highlight(this); function highlight(e) {var rect = document.querySelectorAll(\"rect[class^=cl_data_id_]\");for (var i = 0; i < rect.length; i++) { var thisattr = e.getAttribute(\"data-id\") ; if ( rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.remove(\"myclass\"); } else if ( !rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.add(\"myclass\"); } }}")
   
+  # You'll get "Warning: Ignoring unknown aesthetics: tooltip, onclick, data_id" which is probably due to
+  # https://github.com/tidyverse/ggplot2/issues/1909
   p <- ggplot(df, aes(ymin = -0.20)) + 
     geom_rect_interactive(aes(xmin = wm,
                               xmax = w,
@@ -111,12 +113,14 @@ draw_order <- function(df) {
   
   df$onclick <- sprintf("highlight(this); function highlight(e) {var rect = document.querySelectorAll(\"rect[class^=cl_data_id_]\");for (var i = 0; i < rect.length; i++) { var thisattr = e.getAttribute(\"data-id\") ; if ( rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.remove(\"myclass\"); } else if ( !rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.add(\"myclass\"); } }}")
   
+  # You'll get "Warning: Ignoring unknown aesthetics: tooltip, onclick, data_id" which is probably due to
+  # https://github.com/tidyverse/ggplot2/issues/1909
   p <- ggplot(df, aes(ymin = -0.20)) + 
     geom_rect_interactive(aes(xmin = wm,
                               xmax = w,
                               ymin = 0,
                               ymax = y_axis_fix_value,
-                             # tooltip = tooltip,
+                              tooltip = tooltip,
                               onclick = onclick,
                               data_id = uid),
                           fill = df$Vari,
@@ -285,7 +289,7 @@ if(remove_blank_courses){
 
 # Sample
 #
-data <- data[1:100,]
+#data <- data[1400:nrow(data),]
 
 # Remove single quotes from names
 data$Nimi <- gsub("'", "", data$Nimi)
@@ -348,8 +352,9 @@ sapply(unique(coursedata$Nimi), function(x) {
   
   Nimi <- x
   
-  # Other output formats are possible, too. Change to something like
-  ## sapply(c("pdf", "html", "doc"), function(y) {...}
+  # Other output formats are possible, too, but of course you'd loose interactivity. Change to something like
+  ## sapply(c("pdf", "html"), function(y) {...} 
+  # and build a suitable template file for each
   sapply("html", function(y) {
     
     rmarkdown::render(paste0("_template_", y, ".Rmd"),

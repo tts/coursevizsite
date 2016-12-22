@@ -28,6 +28,7 @@ output:
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+tooltip_css <- "background-color:white;padding:10px;font-style:italic;"
 ```
 
 ``` {r recomm}
@@ -39,8 +40,6 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
 ##############################################
 
 to_plot <- filterdata(coursedata, params$person)
-
-tooltip_css <- "background-color:white;padding:10px;font-style:italic;"
 
 # Which courses from the recommendation list has the student done?
 #
@@ -74,6 +73,7 @@ names(courses_done) <- c("schoolyear","Lukukausi","Kurssinimi", "Opintopisteet",
 to_plot_o <- courses_done %>% 
   mutate(width = Opintopisteet) %>% 
   group_by(schoolyear) %>%
+  mutate(tooltip = paste0(Kurssinimi, "<br/>", gsub("_", " ", combined))) %>%
   mutate(w = cumsum(width)) %>%
   mutate(wm = w - width) %>%
   mutate(wt = wm + (w - wm)/2) %>% 
@@ -120,8 +120,8 @@ to_plot_done <- to_plot_done[!duplicated(to_plot_done), ]
 
 plot <- draw(to_plot_done)
 
-tooltip_css <- "background-color:white;padding:10px;font-style:italic;"
-
+# TODO: the warning "The labeller API has been updated. Labellers taking `variable`and `value` arguments are now deprecated"
+# needs to be taken seriously and fixed
 ggiraph(code = print(plot + facet_grid(. ~ schoolyear, 
                                        scales = "free_x", 
                                        space = "free_x", 
