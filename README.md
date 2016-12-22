@@ -17,3 +17,7 @@ Coursevizsite plots barcharts from student course data as a HTML site. If you ar
 ### How to use
 
 If you are working with RStudio, open up a new project, save data files in `data` subdirectory, and run `rmarkdown::render_site()`. The HTML files are outputted in the subdirectory defined in `_site.yml`, one file per student, along with index.html etc.
+
+### Credits
+
+Thanks to RStudio for [R Markdown Websites](http://rmarkdown.rstudio.com/rmarkdown_websites.html), Hadley Wickham and other contributors for [dplyr](https://github.com/hadley/dplyr), [tidyr](https://github.com/tidyverse/tidyr), [ggplot2](https://github.com/tidyverse/ggplot2) and [readxl](https://github.com/hadley/readxl), David Gohel for [ggiraph](https://github.com/davidgohel/ggiraph), and the whole R community for all the rest. 
