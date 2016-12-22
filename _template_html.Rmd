@@ -73,7 +73,7 @@ names(courses_done) <- c("schoolyear","Lukukausi","Kurssinimi", "Opintopisteet",
 to_plot_o <- courses_done %>% 
   mutate(width = Opintopisteet) %>% 
   group_by(schoolyear) %>%
-  mutate(tooltip = paste0(Kurssinimi, "<br/>", gsub("_", " ", combined))) %>%
+  mutate(ttip = paste0(Kurssinimi, "<br/>", gsub("_", " ", combined))) %>%
   mutate(w = cumsum(width)) %>%
   mutate(wm = w - width) %>%
   mutate(wt = wm + (w - wm)/2) %>% 

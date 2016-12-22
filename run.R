@@ -100,9 +100,10 @@ draw <- function(df) {
     scale_y_continuous(breaks = seq(0,
                                     y_axis_nr_empty_ticks_above_zero+length(y_axis_ticks),
                                     by=1),
-                       labels = c(y_axis_empty_ticks, y_axis_ticks)) +
-    ggtitle(paste0(df$Opiskelijanumero, " ",  df$Nimi[1])) +
-    theme(plot.title = element_text(size = title_font_size))
+                       labels = c(y_axis_empty_ticks, y_axis_ticks)) 
+  #+
+   # ggtitle(paste0(df$Opiskelijanumero, " ",  df$Nimi[1])) +
+  #  theme(plot.title = element_text(size = title_font_size))
 
   return(p)
   
@@ -120,7 +121,7 @@ draw_order <- function(df) {
                               xmax = w,
                               ymin = 0,
                               ymax = y_axis_fix_value,
-                              tooltip = tooltip,
+                              tooltip = ttip,
                               onclick = onclick,
                               data_id = uid),
                           fill = df$Vari,
@@ -289,7 +290,7 @@ if(remove_blank_courses){
 
 # Sample
 #
-#data <- data[1400:nrow(data),]
+data <- data[1:160,]
 
 # Remove single quotes from names
 data$Nimi <- gsub("'", "", data$Nimi)
