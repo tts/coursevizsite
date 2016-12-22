@@ -1,0 +1,137 @@
+---
+params:
+  person: "Aalto Antti"
+  hoverfill: "fill:orange;"
+output: 
+  html_document
+---
+
+ <style type="text/css">
+ body {
+  padding: 50px 5px 25px 5px;
+ }
+ div.main-container { 
+    max-width: 3000px; 
+ }
+ div.html-widget {
+    width: 1600px;
+    height: 300px;
+ }
+ svg .myclass {
+    fill: #99004c;
+    stroke: black;
+    stroke-dasharray: 2;
+    color: #6600cc;
+  }
+</style>
+
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+``` {r recomm}
+##############################################
+#
+# Plot that shows the recommended order to 
+# make courses
+#
+##############################################
+
+to_plot <- filterdata(coursedata, params$person)
+
+tooltip_css <- "background-color:white;padding:10px;font-style:italic;"
+
+# Which courses from the recommendation list has the student done?
+#
+# See http://stackoverflow.com/a/22949680
+
+# Codes of all her courses, to be matched to the combined key
+course_codes_from_to_plot_df <- list(to_plot$Kurssi_koodi)
+
+# Empty character vectors the size of the recommendations, 
+# the first one for indexing with "done", and the second one for storing the combined key
+this_is_done <- character(nrow(recomm_united))
+this_is_combined_key <- character(nrow(recomm_united))
+
+# For every course, check if there's a match
+for(i in seq_along(course_codes_from_to_plot_df[[1]])){
+  if (!course_codes_from_to_plot_df[[1]][i] %in% c("P", "Zero")) { # skip P and Zero rows
+    this_is_done[grepl(x = recomm_united$combined, pattern = course_codes_from_to_plot_df[[1]][i])] <- "done"
+    this_is_combined_key[grepl(x = recomm_united$combined, pattern = course_codes_from_to_plot_df[[1]][i])] <- course_codes_from_to_plot_df[[1]][i]
+  }
+} 
+recomm_united_done <- cbind(recomm_united, this_is_done, this_is_combined_key, stringsAsFactors = FALSE)
+
+# If this_is_combined_key is empty, change Vari to white which denotes a course not done yet
+courses_done <- recomm_united_done %>% 
+  rename(oldVari = Vari) %>% 
+  mutate(Vari = ifelse(this_is_combined_key =='', "white", oldVari)) %>% 
+  select(Vuosi, Lukukausi, Kurssinimi, Opintopisteet, Koodi, Vari, combined)
+
+names(courses_done) <- c("schoolyear","Lukukausi","Kurssinimi", "Opintopisteet","Koodi","Vari","combined")
+
+to_plot_o <- courses_done %>% 
+  mutate(width = Opintopisteet) %>% 
+  group_by(schoolyear) %>%
+  mutate(w = cumsum(width)) %>%
+  mutate(wm = w - width) %>%
+  mutate(wt = wm + (w - wm)/2) %>% 
+  mutate(uid = combined) # data_id value for the onclick function 
+
+plot_o <- draw_order(to_plot_o)
+  
+ggiraph(code = print(plot_o + facet_grid(. ~schoolyear,
+                                         scales = "free_x", 
+                                         space = "free_x") + theme(strip.text.x = element_text(size = 20))),
+        width=0.8,
+        width_svg = 25,
+        height_svg = 9,
+        hover_css = "fill-opacity:.3;cursor:pointer;",
+        tooltip_extra_css = tooltip_css)
+
+```
+
+``` {r facet}
+################################################################
+#
+# Plot that shows the timeline of courses done by this student
+#
+################################################################
+
+# Add the combined key to courses for the onclick function
+#
+# From that row in recomm_united_done, where there is a matching Kurssi_koodi in this_is_combined_key, 
+# take the combined key
+
+to_plot_done <- to_plot %>% 
+  ungroup() %>% 
+  left_join(recomm_united_done, 
+            by= c("Kurssi_koodi"="this_is_combined_key")) %>% 
+  mutate(uid = ifelse(is.na(combined), Kurssi_koodi, combined)) %>% # if the course is not done yet, use the course code 
+  mutate(Lukukausi = Lukukausi.x) %>% 
+  mutate(Vuosi = Vuosi.x) %>% 
+  mutate(Opintopisteet = Opintopisteet.x) %>% 
+  mutate(Vari = Vari.x) %>% 
+  select(Opiskelijanumero, Nimi, Kurssi_koodi, Kurssi_nimi, Opintopisteet, Lukukausi, Vuosi, Vari, schoolyear, schoolyearrange,
+         color, height, width, tooltip, w, wm, wt, termsum, uid)
+
+to_plot_done <- to_plot_done[!duplicated(to_plot_done), ]
+
+plot <- draw(to_plot_done)
+
+tooltip_css <- "background-color:white;padding:10px;font-style:italic;"
+
+ggiraph(code = print(plot + facet_grid(. ~ schoolyear, 
+                                       scales = "free_x", 
+                                       space = "free_x", 
+                                       labeller=labels) + theme(strip.text.x = element_text(size = 24))),
+        width=1,
+        width_svg = 35,
+        height_svg = 12,
+        hover_css = "fill-opacity:.3;cursor:pointer;",
+        tooltip_extra_css = tooltip_css)
+
+
+```
+

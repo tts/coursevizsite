@@ -1,0 +1,9 @@
+name: "ThisCourse"
+output_dir: "_course"
+navbar:
+  title: "ThisCourse"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html

@@ -1,0 +1,18 @@
+---
+title: "This course"
+---
+
+Please navigate to individual visualizations from the links below.
+
+```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+
+source("run.R")
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+source("sitemap.R")
+vizlisting()
+
+```
