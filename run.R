@@ -53,7 +53,24 @@ y_axis_fix_value <- 5
 # Draws the plot that shows which courses the student has done
 draw <- function(df) {
   
-  df$onclick <- sprintf("highlight(this); function highlight(e) {var rect = document.querySelectorAll(\"rect[class^=cl_data_id_]\");for (var i = 0; i < rect.length; i++) { var thisattr = e.getAttribute(\"data-id\") ; if ( rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.remove(\"myclass\"); } else if ( !rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.add(\"myclass\"); } }}")
+  # All SVG rect elements here have a CSS class attribute the name of which starts with the string cl_data_id_.
+  # Rects have also given a data-id attribute, defined as the "uid" variable in the dataframes to be
+  # plotted. The value of the data-id attribute is either a single course code, or the combined key of 
+  # all possible course code variants. The former, if the course has not been done. The latter,
+  # if it is done. 
+  #
+  # Whenever one of the bars is clicked, all bars with the same data-id are highlighted, if found. This is how
+  # it happens:
+  # 
+  # The data-id attribute value of the clicked bar is stored in the "this_data_id" variable.
+  # Then, rect elements are selected with a "starts with" attribute selector [=^] that matches to cl_data_id_,
+  # and looped over. If, among the classes of the rect, there is none with the name "myclass" but the data-id value is the same
+  # as the "this_data_id" variable value, the myclass is added - and its CSS style definitions are fired.
+  #
+  # If, on the other hand, there already is a "myclass" class (meaning the highlight is on), it is removed,
+  # and the original color of the bar is returned.
+  df$onclick <- sprintf("highlight(this); function highlight(e) {var this_data_id = e.getAttribute(\"data-id\"); var rect = document.querySelectorAll(\"rect[class^=cl_data_id_]\"); for (var i = 0; i < rect.length; i++) { if ( rect[i].classList.contains(\"myclass\")  ) { rect[i].classList.remove(\"myclass\"); } else if ( !rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===this_data_id ) { rect[i].classList.add(\"myclass\"); } }}")
+  
   
   # You'll get "Warning: Ignoring unknown aesthetics: tooltip, onclick, data_id" which is probably due to
   # https://github.com/tidyverse/ggplot2/issues/1909
@@ -111,7 +128,7 @@ draw <- function(df) {
 # Draws the plot that shows the recommended order of courses
 draw_order <- function(df) {
   
-  df$onclick <- sprintf("highlight(this); function highlight(e) {var rect = document.querySelectorAll(\"rect[class^=cl_data_id_]\");for (var i = 0; i < rect.length; i++) { var thisattr = e.getAttribute(\"data-id\") ; if ( rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.remove(\"myclass\"); } else if ( !rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===thisattr ) { rect[i].classList.add(\"myclass\"); } }}")
+  df$onclick <- sprintf("highlight(this); function highlight(e) {var this_data_id = e.getAttribute(\"data-id\"); var rect = document.querySelectorAll(\"rect[class^=cl_data_id_]\"); for (var i = 0; i < rect.length; i++) { if ( rect[i].classList.contains(\"myclass\")  ) { rect[i].classList.remove(\"myclass\"); } else if ( !rect[i].classList.contains(\"myclass\") && rect[i].getAttribute(\"data-id\")===this_data_id ) { rect[i].classList.add(\"myclass\"); } }}")
   
   # You'll get "Warning: Ignoring unknown aesthetics: tooltip, onclick, data_id" which is probably due to
   # https://github.com/tidyverse/ggplot2/issues/1909
