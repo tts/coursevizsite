@@ -22,3 +22,4 @@ If you are working with RStudio, open up a new project, save data files in `data
 
 Thanks to RStudio for [R Markdown Websites](http://rmarkdown.rstudio.com/rmarkdown_websites.html), Yihui Xie et al. for [knitr](https://github.com/yihui/knitr), Hadley Wickham et al. for [dplyr](https://github.com/hadley/dplyr), [tidyr](https://github.com/tidyverse/tidyr), [ggplot2](https://github.com/tidyverse/ggplot2) and [readxl](https://github.com/hadley/readxl), David Gohel for [ggiraph](https://github.com/davidgohel/ggiraph), and the whole R community for all the rest. 
 
+For a useful example of how to put this all together, thanks to [bookdown](https://github.com/rstudio/bookdown).
