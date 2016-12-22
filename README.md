@@ -1,3 +1,19 @@
 coursevizsite
 =============
 
+Coursevizsite plots barcharts from student course data as a HTML site. If you are looking for a single page solution, see [courseviz](https://github.com/tts/courseviz)
+
+### Prerequisites
+
+* basic **course** data in CSV from reporting services: student number, student name, course code, course name, year, term, study points, score
+* an Excel spreadsheet to **color** courses by type: course code, name of the course type, and color name for that type (TODO: matching step)
+* an Excel spreadsheet with the **recommended order** of taking courses: year (1, 2 etc), term, course name, study points, course codes (alternatives in successive cells in the same row)
+* about.Rmd
+* footer.html
+* header.html
+* styles.css
+* _site.yml
+
+### How to use
+
+If you are working with RStudio, open up a new project, save data files in `data` subdirectory, and run `rmarkdown::render_site()`. The HTML files are outputted in the subdirectory defined in `_site.yml`, one file per student, along with index.html etc.

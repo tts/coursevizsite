@@ -2,4 +2,4 @@
 title: "About This Website"
 ---
 
-Visualizations on how students on this course are doing.
+Visualizations on how students are doing.
