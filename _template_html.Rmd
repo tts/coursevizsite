@@ -8,7 +8,7 @@ output:
 
  <style type="text/css">
  body {
-  padding: 50px 5px 25px 5px;
+  padding: 25px 5px 25px 5px;
  }
  div.main-container { 
     max-width: 3000px; 
@@ -28,7 +28,9 @@ output:
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+
 tooltip_css <- "background-color:white;padding:10px;font-style:italic;"
+
 ```
 
 ``` {r recomm}
@@ -86,7 +88,7 @@ ggiraph(code = print(plot_o + facet_grid(. ~schoolyear,
                                          space = "free_x") + theme(strip.text.x = element_text(size = 20))),
         width=0.8,
         width_svg = 25,
-        height_svg = 9,
+        height_svg = 7,
         hover_css = "fill-opacity:.3;cursor:pointer;",
         tooltip_extra_css = tooltip_css)
 
